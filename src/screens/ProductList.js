@@ -12,9 +12,8 @@ import {
   View,
   Toast
 } from 'native-base';
-
-// Actions
-import { GET_PRODUCTS } from '../publics/redux/actions/types';
+// Product Actions
+import { getProducts } from '../publics/redux/actions/productActions';
 // Utils
 import { REST_API } from '../utils/constants';
 // Components
@@ -181,11 +180,7 @@ const mapStateToProps = state => ({
   products: state.product.products
 });
 
-const mapDispatchToProps = dispatch => ({
-  getProducts: () => dispatch({ type: GET_PRODUCTS })
-});
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { getProducts }
 )(ProductList);
