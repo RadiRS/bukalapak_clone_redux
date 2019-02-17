@@ -27,6 +27,8 @@
     "jest": "24.0.0",
     "metro-react-native-babel-preset": "0.51.1",
     "react-test-renderer": "16.6.3",
+    "redux-devtools-extension": "^2.13.8",
+    "remote-redux-devtools": "^0.5.16",
     "standard": "^12.0.1"
   },
   "jest": {

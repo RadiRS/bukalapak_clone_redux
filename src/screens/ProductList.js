@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { StatusBar, FlatList } from 'react-native';
 import {
@@ -11,13 +13,15 @@ import {
   Toast
 } from 'native-base';
 
+// Actions
+import { GET_PRODUCTS } from '../publics/redux/actions/types';
 // Utils
 import { REST_API } from '../utils/constants';
 // Components
 import CartItem from '../components/CartItem';
 import ButtonComponent from '../components/Button';
 
-export default class ProductList extends Component {
+class ProductList extends Component {
   state = {
     products: [],
     cart: [],
@@ -77,6 +81,9 @@ export default class ProductList extends Component {
   };
 
   async componentDidMount() {
+    const p = this.props.getProducts();
+    console.log(p);
+
     const products = await axios.get(`${REST_API}/products/`);
     const orders = await axios.get(`${REST_API}/orders/`);
 
@@ -169,3 +176,16 @@ export default class ProductList extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  products: state.product.products
+});
+
+const mapDispatchToProps = dispatch => ({
+  getProducts: () => dispatch({ type: GET_PRODUCTS })
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProductList);
