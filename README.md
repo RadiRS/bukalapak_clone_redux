@@ -1,16 +1,18 @@
-## Task 01 Arkademy
+## Task 03 Arkademy
 
 ### Bukalapak Clone
 
-Tugas minggu pertama bootcamp **Arkademy**. Membuat aplikasi E-Commerce dengan ketentuan **Product List, Product Detail, Cart, Payment Page**
+Tugas minggu ketiga bootcamp **Arkademy**. Membuat aplikasi E-Commerce dengan ketentuan **Product List, Product Detail, Cart, Payment Page, Register Page, Login Page, Profile Page**
 
 ### Tech :
 
 - React Native
-- Map
-- State, Props
-- React Router Navigation Flux
+- Redux
+- Redux Thunk
+- Redux Promise Middleware
+- React Navigation
 - Native Base
+- AdonisJS
 
 ### Demo :
 
