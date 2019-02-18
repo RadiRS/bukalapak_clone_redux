@@ -4,14 +4,11 @@ import thunk from 'redux-thunk';
 import reducers from './reducers';
 import promiseMiddleware from 'redux-promise-middleware';
 
+const middleware = [thunk];
+
 const store = createStore(
   reducers,
-  composeWithDevTools(
-    applyMiddleware(thunk, promiseMiddleware),
-    window.__REDUX_DEVTOOLS_EXTENSION__
-      ? window.__REDUX_DEVTOOLS_EXTENSION__()
-      : f => f
-  )
+  composeWithDevTools(applyMiddleware(...middleware, promiseMiddleware))
 );
 
 export default store;

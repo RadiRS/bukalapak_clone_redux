@@ -80,10 +80,11 @@ class ProductList extends Component {
   };
 
   async componentDidMount() {
-    const p = this.props.getProducts();
-    console.log(p);
-
+    this.props.getProducts();
+    // const a = this.props;
+    // console.warn(JSON.stringify(a));
     const products = await axios.get(`${REST_API}/products/`);
+    // const products = this.props.product.products;
     const orders = await axios.get(`${REST_API}/orders/`);
 
     this.setState({
@@ -133,7 +134,8 @@ class ProductList extends Component {
   };
 
   render() {
-    const { products, spinner } = this.state;
+    const { spinner } = this.state;
+    const { products, isLoading } = this.props;
 
     return (
       <Container>
@@ -146,7 +148,7 @@ class ProductList extends Component {
             justifyContent: 'center'
           }}
         >
-          {spinner ? (
+          {isLoading ? (
             <Spinner color="#E40044" />
           ) : (
             products.map((item, index) => (
@@ -163,7 +165,7 @@ class ProductList extends Component {
             //   renderItem={({ item }) => (
             //     <CartItem
             //       onPressBuy={this.handlePressBuyItem}
-            //       // key={index}
+            //       key={item.id}
             //       products={item}
             //       onPress={this.handlePressProduct}
             //     />
@@ -176,8 +178,15 @@ class ProductList extends Component {
   }
 }
 
+ProductList.propTypes = {
+  products: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  getProducts: PropTypes.func.isRequired
+};
+
 const mapStateToProps = state => ({
-  products: state.product.products
+  products: state.product.products,
+  isLoading: state.product.isLoading
 });
 
 export default connect(

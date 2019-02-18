@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { REST_API } from '../../../utils/constants';
 // Actions
 import { GET_PRODUCTS } from '../actions/types';
 
 export const getProducts = () => {
   return {
     type: GET_PRODUCTS,
-    payload: axios.get('http://192.168.1.121:3333/api/v1/products')
+    payload: axios.get(`${REST_API}/products`)
   };
 };
