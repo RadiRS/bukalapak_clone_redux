@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { DrawerActions } from 'react-navigation';
 import { StatusBar, FlatList } from 'react-native';
 import {
   Container,
@@ -36,7 +37,11 @@ class ProductList extends Component {
       headerTintColor: '#fff',
       headerLeft: (
         <View style={{ alignItems: 'center' }}>
-          <ButtonComponent transparent={true} iconName="menu" />
+          <ButtonComponent
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+            transparent={true}
+            iconName="menu"
+          />
         </View>
       ),
       headerRight: (
