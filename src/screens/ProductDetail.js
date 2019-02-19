@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { HeaderBackButton } from 'react-navigation';
 import {
@@ -13,7 +15,8 @@ import {
   Spinner,
   CardItem
 } from 'native-base';
-
+// Product Actions
+import { getProduct } from '../publics/redux/actions/productActions';
 // Utils
 import { REST_API } from '../utils/constants';
 // Helper
@@ -21,8 +24,12 @@ import { idrCurrency } from '../helper/helper';
 // Components
 import ButtonComponent from '../components/Button';
 
-export default class ProductDetail extends Component {
+class ProductDetail extends Component {
   state = {
+    name: '',
+    image: 'default',
+    price: '',
+    description: '',
     data: [],
     spinner: true,
     cart: []
@@ -42,16 +49,26 @@ export default class ProductDetail extends Component {
     };
   };
 
-  async componentDidMount() {
-    const { productId, cart } = this.props.navigation.state.params;
+  componentWillReceiveProps(nextProps) {
+    const { name, image, price, description } = nextProps.product;
 
-    const product = await axios.get(`${REST_API}/product/${productId}`);
-    const { data } = product.data;
+    this.setState({
+      name,
+      image,
+      price,
+      description
+    });
+  }
 
-    const cartProduct = [...this.state.cart, ...cart];
+  componentDidMount() {
+    const { id } = this.props.navigation.state.params;
 
-    this.setState({ data, cart: cartProduct, spinner: false });
-    this.props.navigation.setParams({ cartLength: this.state.cart.length });
+    this.props.getProduct(id);
+    // const product = await axios.get(`${REST_API}/product/${productId}`);
+    // const { data } = product.data;
+    // const cartProduct = [...this.state.cart, ...cart];
+    // this.setState({ data, cart: cartProduct, spinner: false });
+    // this.props.navigation.setParams({ cartLength: this.state.cart.length });
   }
 
   handlePressAdd = product => {
@@ -73,11 +90,12 @@ export default class ProductDetail extends Component {
   };
 
   render() {
-    const { name, image, price, description } = this.state.data;
+    const { name, image, price, description } = this.state;
+    const { isLoading } = this.props;
 
     return (
       <Container>
-        {this.state.spinner ? (
+        {isLoading ? (
           <Spinner color="#E40044" />
         ) : (
           <>
@@ -183,3 +201,19 @@ export default class ProductDetail extends Component {
     );
   }
 }
+
+ProductDetail.propTypes = {
+  product: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  getProduct: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  product: state.product.product,
+  isLoading: state.product.isLoading
+});
+
+export default connect(
+  mapStateToProps,
+  { getProduct }
+)(ProductDetail);

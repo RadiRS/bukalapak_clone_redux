@@ -86,24 +86,6 @@ class ProductList extends Component {
     this.props.navigation.setParams({
       ordersQuantity: this.props.orders.length
     });
-
-    // console.warn(this.props);
-    // const products = this.props.products;
-    // const a = this.props;
-    // console.warn(JSON.stringify(a));
-    // const products = await axios.get(`${REST_API}/products/`);
-    // const products = this.props.product.products;
-    // const orders = await axios.get(`${REST_API}/orders/`);
-    // this.setState({
-    //   products: products.data,
-    //   cart: orders.data,
-    //   spinner: false
-    // });
-
-    // this.props.navigation.setParams({
-    //   cart: this.props.cart,
-    //   cartLength: this.props.cart.length
-    // });
   }
 
   handlePressBuyItem = async product => {
@@ -123,20 +105,15 @@ class ProductList extends Component {
     });
 
     const orders = await axios.get(`${REST_API}/orders/`);
-
     const cart = [...orders.data];
 
     this.props.navigation.setParams({ cartLength: cart.length });
     this.setState({ cart });
   };
 
-  handlePressProduct = async productId => {
-    const orders = await axios.get(`${REST_API}/orders/`);
-    const cart = [...orders.data];
-
+  handlePressProduct = id => {
     this.props.navigation.navigate('ProductDetail', {
-      cart,
-      productId,
+      id,
       handlePressBuyItem: this.handlePressBuyItem
     });
   };
@@ -152,7 +129,7 @@ class ProductList extends Component {
   );
 
   render() {
-    const { products, isLoading } = this.props;
+    const { products, isLoading, getProducts } = this.props;
     return (
       <Container>
         <StatusBar backgroundColor="#E40044" />
@@ -164,8 +141,8 @@ class ProductList extends Component {
             showsVerticalScrollIndicator={false}
             keyExtractor={this.keyExtractor}
             numColumns={2}
-            refreshing={false}
-            onRefresh={() => (refreshing = true)}
+            refreshing={isLoading}
+            onRefresh={() => getProducts()}
             renderItem={this.renderItem}
           />
         )}
@@ -175,16 +152,17 @@ class ProductList extends Component {
 }
 
 ProductList.propTypes = {
-  products: PropTypes.array,
+  products: PropTypes.array.isRequired,
+  orders: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  getProducts: PropTypes.func.isRequired
+  getProducts: PropTypes.func.isRequired,
+  getOrders: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   products: state.product.products,
   orders: state.order.orders,
-  isLoading: state.product.isLoading,
-  isLoadingOrder: state.order.isLoading
+  isLoading: state.product.isLoading
 });
 
 export default connect(

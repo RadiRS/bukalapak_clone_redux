@@ -4,37 +4,57 @@ import {
   GET_PRODUCTS_FULFILLED,
   GET_PRODUCT_PENDING,
   GET_PRODUCT_REJECTED,
-  GET_PRODUCT_FULLFILLED,
+  GET_PRODUCT_FULFILLED,
   CREATE_PRODUCT_PENDING,
   CREATE_PRODUCT_REJECTED,
-  CREATE_PRODUCT_FULLFILLED,
+  CREATE_PRODUCT_FULFILLED,
   UPDATE_PRODUCT_PENDING,
   UPDATE_PRODUCT_REJECTED,
-  UPDATE_PRODUCT_FULLFILLED,
+  UPDATE_PRODUCT_FULFILLED,
   DELETE_PRODUCT_PENDING,
   DELETE_PRODUCT_REJECTED,
-  DELETE_PRODUCT_FULLFILLED
+  DELETE_PRODUCT_FULFILLED
 } from '../actions/types';
 
-const initialState = { products: [], isLoading: false };
+const initialState = { products: [], product: {}, isLoading: false };
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case GET_PRODUCTS_PENDING:
       return {
-        products: [],
+        ...state,
         isLoading: true
       };
 
     case GET_PRODUCTS_REJECTED:
       return {
-        products: [],
+        ...state,
         isLoading: false
       };
 
     case GET_PRODUCTS_FULFILLED:
       return {
+        ...state,
         products: action.payload.data,
+        isLoading: false
+      };
+
+    case GET_PRODUCT_PENDING:
+      return {
+        ...state,
+        isLoading: true
+      };
+
+    case GET_PRODUCT_REJECTED:
+      return {
+        ...state,
+        isLoading: false
+      };
+
+    case GET_PRODUCT_FULFILLED:
+      return {
+        ...state,
+        product: action.payload.data,
         isLoading: false
       };
 
