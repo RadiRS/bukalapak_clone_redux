@@ -1,7 +1,7 @@
 import {
-  GET_PRODUCTS_PENDING,
-  GET_PRODUCTS_REJECTED,
-  GET_PRODUCTS_FULFILLED,
+  GET_ORDERS_PENDING,
+  GET_ORDERS_REJECTED,
+  GET_ORDERS_FULFILLED,
   GET_PRODUCT_PENDING,
   GET_PRODUCT_REJECTED,
   GET_PRODUCT_FULLFILLED,
@@ -16,25 +16,25 @@ import {
   DELETE_PRODUCT_FULLFILLED
 } from '../actions/types';
 
-const initialState = { products: [], isLoading: false };
+const initialState = { orders: [], isLoading: false };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case GET_PRODUCTS_PENDING:
+    case GET_ORDERS_PENDING:
       return {
-        products: [],
+        orders: [],
         isLoading: true
       };
 
-    case GET_PRODUCTS_REJECTED:
+    case GET_ORDERS_REJECTED:
       return {
-        products: [],
+        orders: [],
         isLoading: false
       };
 
-    case GET_PRODUCTS_FULFILLED:
+    case GET_ORDERS_FULFILLED:
       return {
-        products: action.payload.data,
+        orders: action.payload.data,
         isLoading: false
       };
 
