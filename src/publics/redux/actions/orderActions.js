@@ -6,7 +6,8 @@ import {
   DELETE_ORDER,
   CREATE_ORDER,
   INC_ORDER_QTY,
-  DEC_ORDER_QTY
+  DEC_ORDER_QTY,
+  UPDATE_TOTAL_PRICE
 } from '../actions/types';
 
 export const getOrders = () => {
@@ -67,4 +68,15 @@ export const decOrderQty = product => async dispatch => {
     type: DEC_ORDER_QTY,
     payload: { data: res.data, product: product }
   });
+};
+
+export const updateOrderTotalPrice = products => {
+  let totalPrice = products.reduce(function(prev, cur) {
+    return Number(prev) + Number(cur.price);
+  }, 0);
+
+  return {
+    type: UPDATE_TOTAL_PRICE,
+    payload: totalPrice
+  };
 };

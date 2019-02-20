@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { HeaderBackButton } from 'react-navigation';
 import { Alert } from 'react-native';
 import {
@@ -19,20 +18,16 @@ import {
   Spinner,
   View
 } from 'native-base';
-
 // Actions
 import {
   getOrders,
   deleteOrder,
   incOrderQty,
-  decOrderQty
+  decOrderQty,
+  updateOrderTotalPrice
 } from '../publics/redux/actions/orderActions';
-// Utils
-import { REST_API } from '../utils/constants';
 // Helper
 import { idrCurrency } from '../helper/helper';
-// Data Services
-import { updateTotalPrice } from '../services/fakeCartServices';
 // Components
 import ButtonComponent from '../components/Button';
 import AlertComponent from '../components/Alert';
@@ -64,9 +59,15 @@ class CartList extends Component {
     };
   };
 
+  componentDidUpdate(prevProps) {
+    if (this.props.orders !== prevProps.orders) {
+      this.props.updateOrderTotalPrice(this.props.orders);
+    }
+  }
+
   componentDidMount() {
     this.props.getOrders();
-    this.updateTotalPrice(this.props.orders);
+    this.props.updateOrderTotalPrice(this.props.orders);
   }
 
   handleDeleteConfimation = product => {
@@ -95,53 +96,15 @@ class CartList extends Component {
 
   handleIncrementQuantity = product => {
     this.props.incOrderQty(product);
-    // const products = [...this.state.products];
-    // const index = products.indexOf(product);
-    // products[index].qty++;
-    // products[index].price =
-    //   products[index].products.price * products[index].qty;
-    // this.setState({ products });
-    // this.updateTotalPrice(products);
-    // data = {
-    //   qty: this.state.products[index].qty,
-    //   price: this.state.products[index].price
-    // };
-    // await axios.patch(`${REST_API}/order/${product.id}`, data);
   };
 
   handleDecrementQuantity = product => {
     this.props.decOrderQty(product);
-    // const products = [...this.state.products];
-    // const index = products.indexOf(product);
-
-    // products[index].qty--;
-    // if (products[index].qty <= 1) products[index].qty = 1;
-    // products[index].price =
-    //   products[index].products.price * products[index].qty;
-
-    // this.setState({ products });
-    // this.updateTotalPrice(products);
-
-    // data = {
-    //   qty: this.state.products[index].qty,
-    //   price: this.state.products[index].price
-    // };
-
-    // await axios.patch(`${REST_API}/order/${product.id}`, data);
-  };
-
-  updateTotalPrice = products => {
-    let totalPrice = products.reduce(function(prev, cur) {
-      return Number(prev) + Number(cur.price);
-    }, 0);
-
-    this.setState({ totalPrice });
-    // updateTotalPrice(totalPrice);
   };
 
   render() {
     const { products, totalPrice, spinner, showAlert } = this.state;
-    const { orders, isLoading } = this.props;
+    const { orders, isLoading, totalPriceOrders } = this.props;
 
     return (
       <Container>
@@ -271,7 +234,7 @@ class CartList extends Component {
                 <Col style={{ padding: 10 }}>
                   <Text style={{ color: '#9A9A9A' }}>TOTAL BELANJA</Text>
                   <Text style={{ fontSize: 20, color: '#E40044' }}>
-                    {idrCurrency(totalPrice)}
+                    {idrCurrency(totalPriceOrders)}
                   </Text>
                 </Col>
                 <Col style={{ padding: 10 }}>
@@ -292,20 +255,23 @@ class CartList extends Component {
 
 CartList.propTypes = {
   orders: PropTypes.array.isRequired,
+  totalPriceOrders: PropTypes.number.isRequired,
   isLoading: PropTypes.bool.isRequired,
   getOrders: PropTypes.func.isRequired,
   deleteOrder: PropTypes.func.isRequired,
   incOrderQty: PropTypes.func.isRequired,
-  decOrderQty: PropTypes.func.isRequired
+  decOrderQty: PropTypes.func.isRequired,
+  updateOrderTotalPrice: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   orders: state.order.orders,
+  totalPriceOrders: state.order.totalPriceOrders,
   message: state.order.message,
   isLoading: state.order.isLoading
 });
 
 export default connect(
   mapStateToProps,
-  { getOrders, deleteOrder, incOrderQty, decOrderQty }
+  { getOrders, deleteOrder, incOrderQty, decOrderQty, updateOrderTotalPrice }
 )(CartList);

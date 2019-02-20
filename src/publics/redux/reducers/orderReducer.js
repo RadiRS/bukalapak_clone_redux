@@ -11,7 +11,8 @@ import {
   DELETE_ORDER_FULFILLED,
   DELETE_ORDER,
   INC_ORDER_QTY,
-  DEC_ORDER_QTY
+  DEC_ORDER_QTY,
+  UPDATE_TOTAL_PRICE
 } from '../actions/types';
 
 const initialState = {
@@ -92,6 +93,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         orders
+      };
+
+    case UPDATE_TOTAL_PRICE:
+      return {
+        ...state,
+        totalPriceOrders: action.payload
       };
 
     default:

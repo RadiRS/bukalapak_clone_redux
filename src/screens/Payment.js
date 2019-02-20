@@ -260,7 +260,7 @@ export default class Payment extends Component {
                             marginBottom: 10
                           }}
                         >
-                          {idrCurrency(product.products.price)}
+                          {idrCurrency(product.price)}
                         </Text>
                       </View>
                     ))}
