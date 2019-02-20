@@ -79,6 +79,14 @@ class ProductList extends Component {
         ordersQuantity: this.props.orders.length
       });
     }
+    if (this.props.message !== prevProps.message) {
+      Toast.show({
+        text: this.props.message,
+        buttonText: 'Okay',
+        duration: 2000,
+        type: 'success'
+      });
+    }
   }
 
   componentDidMount() {
@@ -95,15 +103,7 @@ class ProductList extends Component {
   };
 
   handlePressBuyItem = product => {
-    const data = {
-      product_id: product.id,
-      qty: 1,
-      price: product.price
-    };
-
-    this.props.createOrder(data);
-
-    // const result = await axios.post(`${REST_API}/order/`, data);
+    this.props.createOrder(product);
 
     if (this.props.message) {
       Toast.show({
@@ -113,12 +113,6 @@ class ProductList extends Component {
         type: 'success'
       });
     }
-
-    // const orders = await axios.get(`${REST_API}/orders/`);
-    // const cart = [...orders.data];
-
-    // this.props.navigation.setParams({ cartLength: cart.length });
-    // this.setState({ cart });
   };
 
   handlePressProduct = id => {

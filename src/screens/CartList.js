@@ -21,7 +21,12 @@ import {
 } from 'native-base';
 
 // Actions
-import { getOrders, deleteOrder } from '../publics/redux/actions/orderActions';
+import {
+  getOrders,
+  deleteOrder,
+  incOrderQty,
+  decOrderQty
+} from '../publics/redux/actions/orderActions';
 // Utils
 import { REST_API } from '../utils/constants';
 // Helper
@@ -59,13 +64,9 @@ class CartList extends Component {
     };
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.props.getOrders();
-    // const products = await axios.get(`${REST_API}/orders/`);
-
     this.updateTotalPrice(this.props.orders);
-    // this.setState({ products: products.data, spinner: false });
-    // this.props.navigation.setParams({ cartLength: this.state.products.length });
   }
 
   handleDeleteConfimation = product => {
@@ -92,43 +93,41 @@ class CartList extends Component {
     this.props.navigation.navigate('Payment');
   };
 
-  handleIncrementQuantity = async product => {
-    const products = [...this.state.products];
-    const index = products.indexOf(product);
-
-    products[index].qty++;
-    products[index].price =
-      products[index].products.price * products[index].qty;
-
-    this.setState({ products });
-    this.updateTotalPrice(products);
-
-    data = {
-      qty: this.state.products[index].qty,
-      price: this.state.products[index].price
-    };
-
-    await axios.patch(`${REST_API}/order/${product.id}`, data);
+  handleIncrementQuantity = product => {
+    this.props.incOrderQty(product);
+    // const products = [...this.state.products];
+    // const index = products.indexOf(product);
+    // products[index].qty++;
+    // products[index].price =
+    //   products[index].products.price * products[index].qty;
+    // this.setState({ products });
+    // this.updateTotalPrice(products);
+    // data = {
+    //   qty: this.state.products[index].qty,
+    //   price: this.state.products[index].price
+    // };
+    // await axios.patch(`${REST_API}/order/${product.id}`, data);
   };
 
-  handleDecrementQuantity = async product => {
-    const products = [...this.state.products];
-    const index = products.indexOf(product);
+  handleDecrementQuantity = product => {
+    this.props.decOrderQty(product);
+    // const products = [...this.state.products];
+    // const index = products.indexOf(product);
 
-    products[index].qty--;
-    if (products[index].qty <= 1) products[index].qty = 1;
-    products[index].price =
-      products[index].products.price * products[index].qty;
+    // products[index].qty--;
+    // if (products[index].qty <= 1) products[index].qty = 1;
+    // products[index].price =
+    //   products[index].products.price * products[index].qty;
 
-    this.setState({ products });
-    this.updateTotalPrice(products);
+    // this.setState({ products });
+    // this.updateTotalPrice(products);
 
-    data = {
-      qty: this.state.products[index].qty,
-      price: this.state.products[index].price
-    };
+    // data = {
+    //   qty: this.state.products[index].qty,
+    //   price: this.state.products[index].price
+    // };
 
-    await axios.patch(`${REST_API}/order/${product.id}`, data);
+    // await axios.patch(`${REST_API}/order/${product.id}`, data);
   };
 
   updateTotalPrice = products => {
@@ -295,7 +294,9 @@ CartList.propTypes = {
   orders: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   getOrders: PropTypes.func.isRequired,
-  deleteOrder: PropTypes.func.isRequired
+  deleteOrder: PropTypes.func.isRequired,
+  incOrderQty: PropTypes.func.isRequired,
+  decOrderQty: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -306,5 +307,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getOrders, deleteOrder }
+  { getOrders, deleteOrder, incOrderQty, decOrderQty }
 )(CartList);

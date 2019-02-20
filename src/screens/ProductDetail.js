@@ -15,8 +15,9 @@ import {
   Spinner,
   CardItem
 } from 'native-base';
-// Product Actions
+// Product
 import { getProduct } from '../publics/redux/actions/productActions';
+import { createOrder } from '../publics/redux/actions/orderActions';
 // Utils
 import { REST_API } from '../utils/constants';
 // Helper
@@ -64,21 +65,10 @@ class ProductDetail extends Component {
     const { id } = this.props.navigation.state.params;
 
     this.props.getProduct(id);
-    // const product = await axios.get(`${REST_API}/product/${productId}`);
-    // const { data } = product.data;
-    // const cartProduct = [...this.state.cart, ...cart];
-    // this.setState({ data, cart: cartProduct, spinner: false });
-    // this.props.navigation.setParams({ cartLength: this.state.cart.length });
   }
 
   handlePressAdd = product => {
-    const { handlePressBuyItem } = this.props.navigation.state.params;
-    const cart = [...this.state.cart, product];
-
-    this.props.navigation.setParams({ cartLength: cart.length });
-    this.setState({ cart });
-
-    handlePressBuyItem(product);
+    this.props.createOrder(product);
   };
 
   handlePressBuy = product => {
@@ -178,7 +168,7 @@ class ProductDetail extends Component {
               >
                 <Col style={{ marginRight: 3 }}>
                   <ButtonComponent
-                    onPress={() => this.handlePressAdd(this.state.data)}
+                    onPress={() => this.handlePressAdd(this.props.product)}
                     buttonColor="#f5f5f5"
                     textColor="#E40044"
                     block={true}
@@ -205,7 +195,8 @@ class ProductDetail extends Component {
 ProductDetail.propTypes = {
   product: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  getProduct: PropTypes.func.isRequired
+  getProduct: PropTypes.func.isRequired,
+  createOrder: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -215,5 +206,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProduct }
+  { getProduct, createOrder }
 )(ProductDetail);

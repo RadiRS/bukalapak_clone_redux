@@ -9,7 +9,9 @@ import {
   DELETE_ORDER_PENDING,
   DELETE_ORDER_REJECTED,
   DELETE_ORDER_FULFILLED,
-  DELETE_ORDER
+  DELETE_ORDER,
+  INC_ORDER_QTY,
+  DEC_ORDER_QTY
 } from '../actions/types';
 
 const initialState = {
@@ -63,6 +65,33 @@ export default function(state = initialState, action) {
         orders: state.orders.filter(
           order => order.id !== action.payload.order.id
         )
+      };
+
+    case INC_ORDER_QTY:
+      let orders = [...state.orders];
+      let index = orders.indexOf(action.payload.product);
+      let currentQuantity = state.orders[index].qty;
+      orders[index].qty = currentQuantity + 1;
+      orders[index].price =
+        action.payload.product.products.price * (currentQuantity + 1);
+
+      return {
+        ...state,
+        orders
+      };
+
+    case DEC_ORDER_QTY:
+      orders = [...state.orders];
+      index = orders.indexOf(action.payload.product);
+      currentQuantity = state.orders[index].qty;
+      qty = currentQuantity <= 1 ? 1 : currentQuantity - 1;
+
+      orders[index].qty = qty;
+      orders[index].price = action.payload.product.products.price * qty;
+
+      return {
+        ...state,
+        orders
       };
 
     default:
