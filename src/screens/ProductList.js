@@ -5,7 +5,7 @@ import axios from 'axios';
 import { DrawerActions } from 'react-navigation';
 import { StatusBar, FlatList } from 'react-native';
 import { Container, Spinner, Badge, Text, View, Toast } from 'native-base';
-// Product Actions
+// Actions
 import { getProducts } from '../publics/redux/actions/productActions';
 import { getOrders, createOrder } from '../publics/redux/actions/orderActions';
 // Utils

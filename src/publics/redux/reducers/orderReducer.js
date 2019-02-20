@@ -8,10 +8,16 @@ import {
   UPDATE_ORDER_FULFILLED,
   DELETE_ORDER_PENDING,
   DELETE_ORDER_REJECTED,
-  DELETE_ORDER_FULFILLED
+  DELETE_ORDER_FULFILLED,
+  DELETE_ORDER
 } from '../actions/types';
 
-const initialState = { orders: [], isLoading: false, message: '' };
+const initialState = {
+  orders: [],
+  isLoading: false,
+  message: '',
+  totalPriceOrders: 0
+};
 
 export default function(state = initialState, action) {
   switch (action.type) {
@@ -39,15 +45,25 @@ export default function(state = initialState, action) {
         m => m.id === action.payload.data.id
       );
 
-      if (productInStateOrders) {
-        return { ...state, message: action.payload.status };
-      } else {
+      if (productInStateOrders)
         return {
           ...state,
-          orders: [action.payload.data, ...state.orders],
           message: action.payload.status
         };
-      }
+
+      return {
+        ...state,
+        orders: [action.payload.data, ...state.orders],
+        message: action.payload.status
+      };
+
+    case DELETE_ORDER:
+      return {
+        ...state,
+        orders: state.orders.filter(
+          order => order.id !== action.payload.order.id
+        )
+      };
 
     default:
       return state;

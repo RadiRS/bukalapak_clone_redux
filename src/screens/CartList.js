@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { HeaderBackButton } from 'react-navigation';
 import { Alert } from 'react-native';
@@ -18,6 +20,8 @@ import {
   View
 } from 'native-base';
 
+// Actions
+import { getOrders, deleteOrder } from '../publics/redux/actions/orderActions';
 // Utils
 import { REST_API } from '../utils/constants';
 // Helper
@@ -28,7 +32,7 @@ import { updateTotalPrice } from '../services/fakeCartServices';
 import ButtonComponent from '../components/Button';
 import AlertComponent from '../components/Alert';
 
-export default class CartList extends Component {
+class CartList extends Component {
   state = {
     products: [],
     totalPrice: 0,
@@ -56,39 +60,32 @@ export default class CartList extends Component {
   };
 
   async componentDidMount() {
-    const products = await axios.get(`${REST_API}/orders/`);
+    this.props.getOrders();
+    // const products = await axios.get(`${REST_API}/orders/`);
 
-    this.updateTotalPrice(products.data);
-    this.setState({ products: products.data, spinner: false });
-    this.props.navigation.setParams({ cartLength: this.state.products.length });
+    this.updateTotalPrice(this.props.orders);
+    // this.setState({ products: products.data, spinner: false });
+    // this.props.navigation.setParams({ cartLength: this.state.products.length });
   }
 
-  handleDeleteConfimation = (id, name) => {
+  handleDeleteConfimation = product => {
     Alert.alert(
       'Hapus Barang',
-      `Apa kamu yakin ingin menghapus barang yang dipilih ?\n${name}`,
+      `Apa kamu yakin ingin menghapus barang yang dipilih ?\n${
+        product.products.name
+      }`,
       [
         {
           text: 'Batal',
           style: 'cancel'
         },
-        { text: 'Hapus', onPress: () => this.handlePressRemoveItemCart(id) }
+        {
+          text: 'Hapus',
+          onPress: () => this.props.deleteOrder(product)
+        }
       ],
       { cancelable: false }
     );
-    // this.setState({ showAlert: true });
-  };
-
-  handlePressRemoveItemCart = async id => {
-    await axios.delete(`${REST_API}/order/${id}`);
-
-    this.setState({ spinner: true });
-
-    const products = await axios.get(`${REST_API}/orders/`);
-
-    this.setState({ products: products.data, spinner: false });
-    this.updateTotalPrice(products.data);
-    this.props.navigation.setParams({ cartLength: this.state.products.length });
   };
 
   handlePressPay = () => {
@@ -140,17 +137,18 @@ export default class CartList extends Component {
     }, 0);
 
     this.setState({ totalPrice });
-    updateTotalPrice(totalPrice);
+    // updateTotalPrice(totalPrice);
   };
 
   render() {
     const { products, totalPrice, spinner, showAlert } = this.state;
+    const { orders, isLoading } = this.props;
 
     return (
       <Container>
-        {spinner ? (
+        {isLoading ? (
           <Spinner color="#E40044" />
-        ) : products.length === 0 ? (
+        ) : orders.length === 0 ? (
           <Content
             contentContainerStyle={{ marginTop: '20%', alignItems: 'center' }}
           >
@@ -160,7 +158,7 @@ export default class CartList extends Component {
         ) : (
           <>
             <Content contentContainerStyle={{ backgroundColor: '#F5F5F5' }}>
-              {products.map((product, index) => (
+              {orders.map((product, index) => (
                 <Card key={index} noShadow transparent>
                   <CardItem
                     header
@@ -244,12 +242,7 @@ export default class CartList extends Component {
                         }}
                       >
                         <Icon
-                          onPress={() =>
-                            this.handleDeleteConfimation(
-                              product.id,
-                              product.products.name
-                            )
-                          }
+                          onPress={() => this.handleDeleteConfimation(product)}
                           style={{ color: '#E40044' }}
                           name="trash"
                         />
@@ -273,7 +266,6 @@ export default class CartList extends Component {
                   </CardItem>
                 </Card>
               ))}
-              {/* <AlertComponent show={showAlert} /> */}
             </Content>
             <Footer style={{ backgroundColor: 'white', height: '10%' }}>
               <Row style={{ alignItems: 'center' }}>
@@ -298,3 +290,21 @@ export default class CartList extends Component {
     );
   }
 }
+
+CartList.propTypes = {
+  orders: PropTypes.array.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  getOrders: PropTypes.func.isRequired,
+  deleteOrder: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  orders: state.order.orders,
+  message: state.order.message,
+  isLoading: state.order.isLoading
+});
+
+export default connect(
+  mapStateToProps,
+  { getOrders, deleteOrder }
+)(CartList);
