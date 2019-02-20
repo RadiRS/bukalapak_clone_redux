@@ -5,7 +5,7 @@ class Profile extends Component {
   render() {
     return (
       <View>
-        <Text> Profile Screen </Text>
+        <Text> Profile dfScreen </Text>
       </View>
     );
   }

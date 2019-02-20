@@ -22,9 +22,13 @@ const DashboardStackNavigator = createStackNavigator({
   CartList,
   Payment,
   Search,
-  PaymentDetail,
+  PaymentDetail
+});
+
+const AuthStackNavigator = createStackNavigator({
   Login,
-  Register
+  Register,
+  Profile
 });
 
 // App Drawer Navigator
@@ -33,7 +37,9 @@ const AppDrawerNavigator = createDrawerNavigator(
     Beranda: {
       screen: DashboardStackNavigator
     },
-    Profile
+    Profile: {
+      screen: AuthStackNavigator
+    }
   },
   {
     useNativeAnimations: true,
