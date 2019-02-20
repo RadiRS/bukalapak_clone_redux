@@ -7,7 +7,7 @@ import { StatusBar, FlatList } from 'react-native';
 import { Container, Spinner, Badge, Text, View, Toast } from 'native-base';
 // Product Actions
 import { getProducts } from '../publics/redux/actions/productActions';
-import { getOrders } from '../publics/redux/actions/orderActions';
+import { getOrders, createOrder } from '../publics/redux/actions/orderActions';
 // Utils
 import { REST_API } from '../utils/constants';
 // Components
@@ -60,7 +60,8 @@ class ProductList extends Component {
                 alignSelf: 'flex-start',
                 backgroundColor: '#FDD938',
                 position: 'absolute',
-                left: 130
+                left: 126,
+                bottom: 23
               }}
               warning
             >
@@ -88,27 +89,36 @@ class ProductList extends Component {
     });
   }
 
-  handlePressBuyItem = async product => {
+  handleRefresh = () => {
+    this.props.getProducts();
+    this.props.getOrders();
+  };
+
+  handlePressBuyItem = product => {
     const data = {
       product_id: product.id,
       qty: 1,
       price: product.price
     };
 
-    const result = await axios.post(`${REST_API}/order/`, data);
+    this.props.createOrder(data);
 
-    Toast.show({
-      text: result.data.status,
-      buttonText: 'Okay',
-      duration: 2000,
-      type: 'success'
-    });
+    // const result = await axios.post(`${REST_API}/order/`, data);
 
-    const orders = await axios.get(`${REST_API}/orders/`);
-    const cart = [...orders.data];
+    if (this.props.message) {
+      Toast.show({
+        text: this.props.message,
+        buttonText: 'Okay',
+        duration: 2000,
+        type: 'success'
+      });
+    }
 
-    this.props.navigation.setParams({ cartLength: cart.length });
-    this.setState({ cart });
+    // const orders = await axios.get(`${REST_API}/orders/`);
+    // const cart = [...orders.data];
+
+    // this.props.navigation.setParams({ cartLength: cart.length });
+    // this.setState({ cart });
   };
 
   handlePressProduct = id => {
@@ -129,7 +139,7 @@ class ProductList extends Component {
   );
 
   render() {
-    const { products, isLoading, getProducts } = this.props;
+    const { products, isLoading } = this.props;
     return (
       <Container>
         <StatusBar backgroundColor="#E40044" />
@@ -142,7 +152,7 @@ class ProductList extends Component {
             keyExtractor={this.keyExtractor}
             numColumns={2}
             refreshing={isLoading}
-            onRefresh={() => getProducts()}
+            onRefresh={() => this.handleRefresh()}
             renderItem={this.renderItem}
           />
         )}
@@ -156,16 +166,18 @@ ProductList.propTypes = {
   orders: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   getProducts: PropTypes.func.isRequired,
-  getOrders: PropTypes.func.isRequired
+  getOrders: PropTypes.func.isRequired,
+  createOrder: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   products: state.product.products,
   orders: state.order.orders,
+  message: state.order.message,
   isLoading: state.product.isLoading
 });
 
 export default connect(
   mapStateToProps,
-  { getProducts, getOrders }
+  { getProducts, getOrders, createOrder }
 )(ProductList);

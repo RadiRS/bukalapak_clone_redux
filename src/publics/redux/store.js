@@ -6,9 +6,16 @@ import promiseMiddleware from 'redux-promise-middleware';
 
 const middleware = [thunk];
 
+const loggerMiddleware = store => next => action => {
+  console.log('dispatching: ', action);
+  next(action);
+};
+
 const store = createStore(
   reducers,
-  composeWithDevTools(applyMiddleware(...middleware, promiseMiddleware))
+  composeWithDevTools(
+    applyMiddleware(...middleware, promiseMiddleware, loggerMiddleware)
+  )
 );
 
 export default store;
