@@ -273,14 +273,16 @@ const mapStateToProps = state => ({
   isLoading: state.order.isLoading
 });
 
+const mapDispatchToProps = {
+  getOrders,
+  deleteOrder,
+  incOrderQty,
+  decOrderQty,
+  updateTotalPrice,
+  updateTotalPriceOrder
+};
+
 export default connect(
   mapStateToProps,
-  {
-    getOrders,
-    deleteOrder,
-    incOrderQty,
-    decOrderQty,
-    updateTotalPrice,
-    updateTotalPriceOrder
-  }
+  mapDispatchToProps
 )(CartList);

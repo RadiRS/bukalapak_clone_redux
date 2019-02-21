@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import {
   Container,
@@ -9,27 +10,16 @@ import {
   Thumbnail,
   Spinner
 } from 'native-base';
-
-// Utils
-import { REST_API } from '../utils/constants';
+// Actions
+import { getOrders } from '../publics/redux/actions/orderActions';
 // Helper
 import { idrCurrency } from '../helper/helper';
-// Services
-import { getTotalPrice } from '../services/fakeCartServices';
 // Image
 const bri_logo = require('../../assets/img/bri_logo.png');
 // Components
 import ButtonComponent from '../components/Button';
 
-export default class PaymentDetail extends Component {
-  state = {
-    products: [],
-    totalPrice: 0,
-    spinner: true,
-    customer: {},
-    courier: {}
-  };
-
+class PaymentDetail extends Component {
   static navigationOptions = () => {
     return {
       headerLeft: null,
@@ -38,29 +28,22 @@ export default class PaymentDetail extends Component {
   };
 
   async componentDidMount() {
-    const {
-      totalPrice,
-      customer,
-      courier
-    } = this.props.navigation.state.params;
-    const products = await axios.get(`${REST_API}/orders/`);
-
-    this.setState({
-      products: products.data,
-      spinner: false,
-      totalPrice,
-      customer,
-      courier
-    });
+    this.props.getOrders();
   }
 
   render() {
-    const { products, totalPrice, spinner, customer } = this.state;
+    const {
+      orders,
+      customer,
+      isLoading,
+      totalPriceOrders,
+      courier
+    } = this.props;
 
     return (
       <Container>
         <Content contentContainerStyle={{ backgroundColor: '#F5F5F5' }}>
-          {spinner ? (
+          {isLoading ? (
             <Spinner color="#E40044" />
           ) : (
             <>
@@ -86,7 +69,7 @@ export default class PaymentDetail extends Component {
               >
                 <Text style={{ fontSize: 20 }}>Total Belanja :</Text>
                 <Text style={{ fontSize: 20, color: '#E40044' }}>
-                  {idrCurrency(totalPrice)}
+                  {idrCurrency(totalPriceOrders)}
                 </Text>
               </Card>
               <Card
@@ -145,7 +128,7 @@ export default class PaymentDetail extends Component {
                 <Text style={{ fontSize: 17, marginBottom: 10 }}>
                   Daftar Belanja :
                 </Text>
-                {products.map((product, index) => (
+                {orders.map((product, index) => (
                   <View
                     key={index}
                     style={{
@@ -187,3 +170,20 @@ export default class PaymentDetail extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  orders: state.order.orders,
+  customer: state.order.customer,
+  totalPriceOrders: state.order.totalPriceOrders,
+  courier: state.order.courier,
+  isLoading: state.order.isLoading
+});
+
+const mapDispatchToProps = {
+  getOrders
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PaymentDetail);

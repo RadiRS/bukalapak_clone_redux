@@ -171,7 +171,13 @@ const mapStateToProps = state => ({
   isLoading: state.product.isLoading
 });
 
+const mapDispatchToProps = {
+  getProducts,
+  getOrders,
+  createOrder
+};
+
 export default connect(
   mapStateToProps,
-  { getProducts, getOrders, createOrder }
+  mapDispatchToProps
 )(ProductList);

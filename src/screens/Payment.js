@@ -381,7 +381,14 @@ const mapStateToProps = state => ({
   totalPriceOrders: state.order.totalPriceOrders
 });
 
+const mapDispatchToProps = {
+  getOrders,
+  pickCourier,
+  updateTotalPriceOrder,
+  createCustomer
+};
+
 export default connect(
   mapStateToProps,
-  { getOrders, pickCourier, updateTotalPriceOrder, createCustomer }
+  mapDispatchToProps
 )(Payment);
