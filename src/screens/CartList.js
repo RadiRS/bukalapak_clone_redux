@@ -24,7 +24,8 @@ import {
   deleteOrder,
   incOrderQty,
   decOrderQty,
-  updateOrderTotalPrice
+  updateTotalPrice,
+  updateTotalPriceOrder
 } from '../publics/redux/actions/orderActions';
 // Helper
 import { idrCurrency } from '../helper/helper';
@@ -33,12 +34,12 @@ import ButtonComponent from '../components/Button';
 import AlertComponent from '../components/Alert';
 
 class CartList extends Component {
-  state = {
-    products: [],
-    totalPrice: 0,
-    spinner: true,
-    showAlert: false
-  };
+  // state = {
+  //   products: [],
+  //   totalPrice: 0,
+  //   spinner: true,
+  //   showAlert: false
+  // };
 
   static navigationOptions = ({ navigation }) => {
     const cartLength = navigation.getParam('cartLength');
@@ -61,13 +62,13 @@ class CartList extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.orders !== prevProps.orders) {
-      this.props.updateOrderTotalPrice(this.props.orders);
+      this.props.updateTotalPrice(this.props.orders);
     }
   }
 
   componentDidMount() {
     this.props.getOrders();
-    this.props.updateOrderTotalPrice(this.props.orders);
+    this.props.updateTotalPrice(this.props.orders);
   }
 
   handleDeleteConfimation = product => {
@@ -103,8 +104,8 @@ class CartList extends Component {
   };
 
   render() {
-    const { products, totalPrice, spinner, showAlert } = this.state;
-    const { orders, isLoading, totalPriceOrders } = this.props;
+    // const { products, totalPrice, spinner, showAlert } = this.state;
+    const { orders, isLoading, totalPrice } = this.props;
 
     return (
       <Container>
@@ -234,7 +235,7 @@ class CartList extends Component {
                 <Col style={{ padding: 10 }}>
                   <Text style={{ color: '#9A9A9A' }}>TOTAL BELANJA</Text>
                   <Text style={{ fontSize: 20, color: '#E40044' }}>
-                    {idrCurrency(totalPriceOrders)}
+                    {idrCurrency(totalPrice)}
                   </Text>
                 </Col>
                 <Col style={{ padding: 10 }}>
@@ -255,23 +256,31 @@ class CartList extends Component {
 
 CartList.propTypes = {
   orders: PropTypes.array.isRequired,
-  totalPriceOrders: PropTypes.number.isRequired,
+  totalPrice: PropTypes.number.isRequired,
   isLoading: PropTypes.bool.isRequired,
   getOrders: PropTypes.func.isRequired,
   deleteOrder: PropTypes.func.isRequired,
   incOrderQty: PropTypes.func.isRequired,
   decOrderQty: PropTypes.func.isRequired,
-  updateOrderTotalPrice: PropTypes.func.isRequired
+  updateTotalPrice: PropTypes.func.isRequired,
+  updateTotalPriceOrder: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   orders: state.order.orders,
-  totalPriceOrders: state.order.totalPriceOrders,
+  totalPrice: state.order.totalPrice,
   message: state.order.message,
   isLoading: state.order.isLoading
 });
 
 export default connect(
   mapStateToProps,
-  { getOrders, deleteOrder, incOrderQty, decOrderQty, updateOrderTotalPrice }
+  {
+    getOrders,
+    deleteOrder,
+    incOrderQty,
+    decOrderQty,
+    updateTotalPrice,
+    updateTotalPriceOrder
+  }
 )(CartList);

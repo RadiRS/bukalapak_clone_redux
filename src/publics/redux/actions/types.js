@@ -52,3 +52,8 @@ export const INC_ORDER_QTY = 'INC_ORDER_QTY';
 export const DEC_ORDER_QTY = 'DEC_ORDER_QTY';
 // ## Update Total Price Order
 export const UPDATE_TOTAL_PRICE = 'UPDATE_TOTAL_PRICE';
+export const UPDATE_TOTAL_PRICE_ORDER = 'UPDATE_TOTAL_PRICE_ORDER';
+// ## Update Courier
+export const UPDATE_COURIER = 'UPDATE_COURIER';
+// ## Create Custumer
+export const CREATE_CUSTOMER = 'CREATE_CUSTOMER';

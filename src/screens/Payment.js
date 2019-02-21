@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import {
   Container,
   Content,
@@ -20,9 +20,13 @@ import {
   Footer,
   H2
 } from 'native-base';
-
-// Utils
-import { REST_API } from '../utils/constants';
+// Actions
+import {
+  getOrders,
+  pickCourier,
+  updateTotalPriceOrder,
+  createCustomer
+} from '../publics/redux/actions/orderActions';
 // Helper
 import { idrCurrency } from '../helper/helper';
 // Services
@@ -30,29 +34,7 @@ import { getTotalPrice } from '../services/fakeCartServices';
 // Components
 import ButtonComponent from '../components/Button';
 
-export default class Payment extends Component {
-  state = {
-    products: [],
-    totalPrice: 0,
-    spinner: true,
-    customer: {
-      name: '',
-      email: '',
-      tlp: '',
-      city: '',
-      prov: '',
-      street: ''
-    },
-    couriers: [
-      { name: 'J&T REG', price: 1000 },
-      { name: 'JNE REG', price: 1300 },
-      { name: 'JNE YES', price: 3000 },
-      { name: 'SiCepat REG', price: 2000 },
-      { name: 'SiCepat YES', price: 4000 }
-    ],
-    courier: { name: 'J&T REG', price: 1000 }
-  };
-
+class Payment extends Component {
   static navigationOptions = () => {
     return {
       title: 'Pembayaran',
@@ -64,40 +46,31 @@ export default class Payment extends Component {
   };
 
   handleCourierChange = courier => {
-    let courierInState = this.state.couriers.find(c => c.name === courier);
-    let totalPrice = getTotalPrice() + courierInState.price;
+    let courierInState = this.props.couriers.find(c => c.name === courier);
+    let price = this.props.totalPrice + courierInState.price;
 
-    this.setState(
-      Object.assign(this.state.courier, {
-        name: courierInState.name,
-        price: courierInState.price
-      })
-    );
-    this.setState({ totalPrice });
+    this.props.pickCourier(courierInState);
+    this.props.updateTotalPriceOrder(price);
   };
 
-  async componentDidMount() {
-    const products = await axios.get(`${REST_API}/orders/`);
-    let totalPrice = getTotalPrice() + this.state.courier.price;
+  componentDidMount() {
+    let price = this.props.totalPrice + this.props.courier.price;
 
-    this.setState({ products: products.data, spinner: false, totalPrice });
+    this.props.getOrders();
+    this.props.updateTotalPriceOrder(price);
   }
 
   handlePressPay = () => {
-    const { customer, totalPrice, courier } = this.state;
-    this.props.navigation.navigate('PaymentDetail', {
-      customer,
-      totalPrice,
-      courier
-    });
+    this.props.navigation.navigate('PaymentDetail');
   };
 
   render() {
-    const { spinner, couriers, courier, totalPrice, customer } = this.state;
+    const { couriers, courier, customer } = this.props;
+    const { orders, totalPriceOrders, totalPrice, isLoading } = this.props;
 
     return (
       <Container>
-        {spinner ? (
+        {isLoading ? (
           <Spinner color="#E40044" />
         ) : (
           <>
@@ -214,7 +187,7 @@ export default class Payment extends Component {
                       <Text>Barang</Text>
                       <Text>Sub Total</Text>
                     </Content>
-                    {this.state.products.map((product, index) => (
+                    {orders.map((product, index) => (
                       <View
                         key={index}
                         style={{
@@ -298,7 +271,7 @@ export default class Payment extends Component {
                       }}
                     >
                       <Text>Harga Barang</Text>
-                      <Text>{idrCurrency(getTotalPrice())}</Text>
+                      <Text>{idrCurrency(totalPrice)}</Text>
                     </Content>
                     <Content
                       contentContainerStyle={{
@@ -319,7 +292,7 @@ export default class Payment extends Component {
                       }}
                     >
                       <Text>Sub Total</Text>
-                      <Text>{idrCurrency(totalPrice)}</Text>
+                      <Text>{idrCurrency(totalPriceOrders)}</Text>
                     </Content>
                   </Content>
                 </CardItem>
@@ -340,7 +313,7 @@ export default class Payment extends Component {
                     }}
                   >
                     <Text>Harga Barang</Text>
-                    <Text>{idrCurrency(getTotalPrice())}</Text>
+                    <Text>{idrCurrency(totalPrice)}</Text>
                   </Content>
                   <Content
                     contentContainerStyle={{
@@ -368,7 +341,7 @@ export default class Payment extends Component {
                         color: '#E40044'
                       }}
                     >
-                      {idrCurrency(totalPrice)}
+                      {idrCurrency(totalPriceOrders)}
                     </Text>
                   </Content>
                 </Content>
@@ -379,7 +352,7 @@ export default class Payment extends Component {
                 <Col style={{ padding: 10 }}>
                   <Text style={{ color: '#9A9A9A' }}>Total Harga Barang</Text>
                   <Text style={{ fontSize: 20, color: '#E40044' }}>
-                    {idrCurrency(totalPrice)}
+                    {idrCurrency(totalPriceOrders)}
                   </Text>
                 </Col>
                 <Col style={{ padding: 10 }}>
@@ -397,3 +370,18 @@ export default class Payment extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  orders: state.order.orders,
+  couriers: state.order.couriers,
+  courier: state.order.courier,
+  customer: state.order.customer,
+  isLoading: state.order.isLoading,
+  totalPrice: state.order.totalPrice,
+  totalPriceOrders: state.order.totalPriceOrders
+});
+
+export default connect(
+  mapStateToProps,
+  { getOrders, pickCourier, updateTotalPriceOrder, createCustomer }
+)(Payment);

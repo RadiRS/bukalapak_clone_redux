@@ -12,14 +12,34 @@ import {
   DELETE_ORDER,
   INC_ORDER_QTY,
   DEC_ORDER_QTY,
-  UPDATE_TOTAL_PRICE
+  UPDATE_TOTAL_PRICE,
+  UPDATE_COURIER,
+  UPDATE_TOTAL_PRICE_ORDER,
+  CREATE_CUSTOMER
 } from '../actions/types';
 
 const initialState = {
   orders: [],
   isLoading: false,
   message: '',
-  totalPriceOrders: 0
+  totalPrice: 0,
+  totalPriceOrders: 0,
+  customer: {
+    name: '',
+    email: '',
+    tlp: '',
+    city: '',
+    prov: '',
+    street: ''
+  },
+  couriers: [
+    { name: 'J&T REG', price: 1000 },
+    { name: 'JNE REG', price: 1300 },
+    { name: 'JNE YES', price: 3000 },
+    { name: 'SiCepat REG', price: 2000 },
+    { name: 'SiCepat YES', price: 4000 }
+  ],
+  courier: { name: 'J&T REG', price: 1000 }
 };
 
 export default function(state = initialState, action) {
@@ -95,10 +115,28 @@ export default function(state = initialState, action) {
         orders
       };
 
+    case CREATE_CUSTOMER:
+      return {
+        ...state,
+        customer: action.payload
+      };
+
     case UPDATE_TOTAL_PRICE:
       return {
         ...state,
+        totalPrice: action.payload
+      };
+
+    case UPDATE_TOTAL_PRICE_ORDER:
+      return {
+        ...state,
         totalPriceOrders: action.payload
+      };
+
+    case UPDATE_COURIER:
+      return {
+        ...state,
+        courier: action.payload
       };
 
     default:

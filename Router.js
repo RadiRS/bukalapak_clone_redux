@@ -15,8 +15,9 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Profile from './src/screens/Profile';
 
-// App Stack Navigator
+// App Main Stack Navigator
 const DashboardStackNavigator = createStackNavigator({
+  CartList,
   ProductList,
   ProductDetail,
   CartList,
@@ -25,6 +26,7 @@ const DashboardStackNavigator = createStackNavigator({
   PaymentDetail
 });
 
+// App Auth Stack Stack Navigator
 const AuthStackNavigator = createStackNavigator({
   Login,
   Register,
