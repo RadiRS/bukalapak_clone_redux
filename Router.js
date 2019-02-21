@@ -17,6 +17,7 @@ import Profile from './src/screens/Profile';
 
 // App Main Stack Navigator
 const DashboardStackNavigator = createStackNavigator({
+  // Register,
   ProductList,
   ProductDetail,
   CartList,

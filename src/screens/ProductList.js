@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { DrawerActions } from 'react-navigation';
 import { StatusBar, FlatList } from 'react-native';
 import { Container, Spinner, Badge, Text, View, Toast } from 'native-base';
 // Actions
 import { getProducts } from '../publics/redux/actions/productActions';
 import { getOrders, createOrder } from '../publics/redux/actions/orderActions';
-// Utils
-import { REST_API } from '../utils/constants';
 // Components
 import CartItem from '../components/CartItem';
 import ButtonComponent from '../components/Button';

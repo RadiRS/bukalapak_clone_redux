@@ -8,7 +8,9 @@ import {
   Form,
   Item,
   Input,
-  Footer
+  Footer,
+  Button,
+  Icon
 } from 'native-base';
 import ButtonComponent from '../components/Button';
 import { TextInput } from 'react-native-gesture-handler';
@@ -18,7 +20,17 @@ class Login extends Component {
     return {
       title: 'BukaLapar',
       headerStyle: {
-        backgroundColor: '#F8F8F8'
+        backgroundColor: '#F8F8F8',
+        height: 70,
+        elevation: 0
+      },
+      headerTitleStyle: {
+        color: '#E40044',
+        fontSize: 30
+      },
+      headerTitleContainerStyle: {
+        alignItems: 'center',
+        justifyContent: 'center'
       }
     };
   };
@@ -27,39 +39,79 @@ class Login extends Component {
     return (
       <Container>
         <Content padder>
-          <Text style={{ fontWeight: 'bold' }}> Login </Text>
-          <ButtonComponent
-            buttonColor="#4A439B"
-            block={true}
-            buttonName="Login dengan FB"
-          />
-          <ButtonComponent
-            buttonColor="#E83A2B"
-            block={true}
-            buttonName="Login dengan Google"
-          />
-          <Text style={{ alignSelf: 'center' }}>Atau</Text>
-          {/* <Form> */}
-          <Item>
-            <Input placeholder="Email / Username" />
-          </Item>
-          <Item>
-            <Input textContentType="password" placeholder="Password" />
-          </Item>
-          {/* </Form> */}
-          <Text>Kamu belum punya akun ?</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginTop: 50,
+              marginBottom: 30
+            }}
+          >
+            Login
+          </Text>
+
+          <Button
+            block
+            iconLeft
+            style={{ backgroundColor: '#4A439B', marginBottom: 20 }}
+          >
+            <Icon name="facebook-f" type="FontAwesome" />
+            <Text uppercase={false} style={{ fontSize: 20 }}>
+              Login dengan FB
+            </Text>
+          </Button>
+          <Button
+            block
+            iconLeft
+            style={{ backgroundColor: '#E83A2B', marginBottom: 30 }}
+          >
+            <Icon name="google" type="FontAwesome" />
+            <Text uppercase={false} style={{ fontSize: 20 }}>
+              Login dengan Google
+            </Text>
+          </Button>
+
+          <Text style={{ alignSelf: 'center', fontSize: 20 }}>Atau</Text>
+
+          <View style={{ marginBottom: 30 }}>
+            <Item>
+              <Input placeholder="Email / Username" />
+            </Item>
+            <Item>
+              <Input textContentType="password" placeholder="Password" />
+            </Item>
+          </View>
+
+          <Text style={{ fontSize: 20, color: '#939B9B' }}>
+            Kamu belum punya akun ?
+          </Text>
           <TouchableOpacity
+            style={{ marginBottom: 10 }}
             onPress={() => this.props.navigation.navigate('Register')}
           >
-            <Text style={{ color: '#E40044' }}>Silahkan daftar disini</Text>
+            <Text
+              style={{ color: '#E40044', fontSize: 20, fontWeight: 'bold' }}
+            >
+              Silahkan daftar disini
+            </Text>
           </TouchableOpacity>
-          <Text>Lupa password ?</Text>
-          <TouchableOpacity>
-            <Text style={{ color: '#E40044' }}>Reset password disini</Text>
+          <Text style={{ fontSize: 20, color: '#939B9B' }}>
+            Lupa password ?
+          </Text>
+          <TouchableOpacity style={{ marginBottom: 10 }}>
+            <Text
+              style={{ color: '#E40044', fontSize: 20, fontWeight: 'bold' }}
+            >
+              Reset password disini
+            </Text>
           </TouchableOpacity>
-          <Text>Belum menerima e-mail konfirmasi ?</Text>
-          <TouchableOpacity>
-            <Text style={{ color: '#E40044' }}>
+          <Text style={{ fontSize: 20, color: '#939B9B' }}>
+            Belum menerima e-mail konfirmasi ?
+          </Text>
+          <TouchableOpacity style={{ marginBottom: 10 }}>
+            <Text
+              style={{ color: '#E40044', fontSize: 20, fontWeight: 'bold' }}
+            >
               Kirim ulang email konfirmasi
             </Text>
           </TouchableOpacity>
