@@ -1,6 +1,7 @@
 import {
   createStackNavigator,
   createDrawerNavigator,
+  createSwitchNavigator,
   createAppContainer
 } from 'react-navigation';
 
@@ -17,7 +18,7 @@ import Profile from './src/screens/Profile';
 
 // App Main Stack Navigator
 const DashboardStackNavigator = createStackNavigator({
-  // Register,
+  Login,
   ProductList,
   ProductDetail,
   CartList,
@@ -29,8 +30,13 @@ const DashboardStackNavigator = createStackNavigator({
 // App Auth Stack Stack Navigator
 const AuthStackNavigator = createStackNavigator({
   Login,
-  Register,
-  Profile
+  Register
+});
+
+// App Profile Switch Navigator
+const ProfileSwitchNavigator = createSwitchNavigator({
+  Profile,
+  AuthStackNavigator
 });
 
 // App Drawer Navigator
@@ -40,7 +46,7 @@ const AppDrawerNavigator = createDrawerNavigator(
       screen: DashboardStackNavigator
     },
     Profile: {
-      screen: AuthStackNavigator
+      screen: ProfileSwitchNavigator
     }
   },
   {

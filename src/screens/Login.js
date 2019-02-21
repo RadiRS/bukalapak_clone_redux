@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { TouchableOpacity, AsyncStorage } from 'react-native';
 import {
   View,
   Container,
@@ -12,10 +13,49 @@ import {
   Button,
   Icon
 } from 'native-base';
+// Actions
+import { loginUser } from '../publics/redux/actions/authActions';
+// Component
 import ButtonComponent from '../components/Button';
 import { TextInput } from 'react-native-gesture-handler';
 
 class Login extends Component {
+  state = {
+    email: '',
+    password: ''
+  };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.user !== prevProps.user) {
+      this.props.navigation.navigate('Profile');
+    }
+  }
+
+  componentDidMount() {
+    this._retrieveData();
+  }
+
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userData');
+      if (value !== null) {
+        // We have data!!
+        this.props.navigation.navigate('Profile');
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
+  handleUserLogin = () => {
+    const userdata = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    this.props.loginUser(userdata);
+  };
+
   static navigationOptions = () => {
     return {
       title: 'BukaLapar',
@@ -75,10 +115,17 @@ class Login extends Component {
 
           <View style={{ marginBottom: 30 }}>
             <Item>
-              <Input placeholder="Email / Username" />
+              <Input
+                onChangeText={email => this.setState({ email })}
+                placeholder="Email / Username"
+              />
             </Item>
             <Item>
-              <Input textContentType="password" placeholder="Password" />
+              <Input
+                onChangeText={password => this.setState({ password })}
+                textContentType="password"
+                placeholder="Password"
+              />
             </Item>
           </View>
 
@@ -125,7 +172,11 @@ class Login extends Component {
           }}
         >
           <View style={{ flex: 1 }}>
-            <ButtonComponent buttonName="Login" block={true} />
+            <ButtonComponent
+              onPress={() => this.handleUserLogin()}
+              buttonName="Login"
+              block={true}
+            />
           </View>
         </Footer>
       </Container>
@@ -133,4 +184,15 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = state => ({
+  user: state.auth.user
+});
+
+const mapDispatchToProps = {
+  loginUser
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);
