@@ -154,7 +154,7 @@ class ProductList extends Component {
 
 ProductList.propTypes = {
   products: PropTypes.array.isRequired,
-  orders: PropTypes.array.isRequired,
+  // orders: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   getProducts: PropTypes.func.isRequired,
   getOrders: PropTypes.func.isRequired,

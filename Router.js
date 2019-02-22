@@ -15,6 +15,7 @@ import Search from './src/screens/Search';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Profile from './src/screens/Profile';
+import ProfileSetting from './src/screens/ProfileSetting';
 
 // App Main Stack Navigator
 const DashboardStackNavigator = createStackNavigator({
@@ -33,9 +34,15 @@ const AuthStackNavigator = createStackNavigator({
   Register
 });
 
+// App Profile Stack Navigator
+const ProfileStackNavigator = createStackNavigator({
+  Profile,
+  ProfileSetting
+});
+
 // App Profile Switch Navigator
 const ProfileSwitchNavigator = createSwitchNavigator({
-  Profile,
+  ProfileStackNavigator,
   AuthStackNavigator
 });
 

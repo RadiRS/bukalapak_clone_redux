@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Modal } from 'react-native';
 import {
   Text,
   View,
   Container,
   Content,
-  Thumbnail,
+  Label,
+  Item,
+  Form,
+  Input,
   Button,
   Icon
 } from 'native-base';
@@ -14,6 +17,7 @@ import InfoSlider from 'react-native-infoslider';
 
 class Register extends Component {
   state = {
+    modalVisible: false,
     position: 1,
     interval: null,
     dataSource: [
@@ -31,6 +35,10 @@ class Register extends Component {
       }
     ]
   };
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
 
   componentWillMount() {
     this.setState({
@@ -60,10 +68,6 @@ class Register extends Component {
       headerTitleStyle: {
         fontSize: 20
       },
-      headerTitleContainerStyle: {
-        alignItems: 'center',
-        justifyContent: 'center'
-      },
       headerTintColor: '#fff'
     };
   };
@@ -83,6 +87,9 @@ class Register extends Component {
             />
           </View>
           <Button
+            onPress={() => {
+              this.setModalVisible(true);
+            }}
             block
             style={{ height: 70, backgroundColor: '#E40044', marginBottom: 30 }}
           >
@@ -157,10 +164,70 @@ class Register extends Component {
               </Text>
             </TouchableOpacity>
           </View>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+          >
+            <Container style={{ marginTop: 22 }}>
+              <Content padder>
+                <Form>
+                  <Item stackedLabel>
+                    <Label>Name Lenkap</Label>
+                    <Input />
+                  </Item>
+                  <Item stackedLabel last>
+                    <Label>Email atau Nomor Handphone</Label>
+                    <Input />
+                  </Item>
+                  <Item stackedLabel last>
+                    <Label>Password</Label>
+                    <Input />
+                  </Item>
+                  <Item stackedLabel last>
+                    <Label>Konfirmasi Password</Label>
+                    <Input />
+                  </Item>
+                </Form>
+                <Button
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}
+                  block
+                  style={{
+                    height: 70,
+                    backgroundColor: '#E40044',
+                    marginBottom: 30
+                  }}
+                >
+                  <Text uppercase={false} style={{ fontSize: 20 }}>
+                    Daftar
+                  </Text>
+                </Button>
+                <Button
+                  block
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}
+                  style={{
+                    height: 70,
+                    backgroundColor: '#E40044',
+                    marginBottom: 30
+                  }}
+                >
+                  <Text uppercase={false} style={{ fontSize: 20 }}>
+                    Batal
+                  </Text>
+                </Button>
+              </Content>
+            </Container>
+          </Modal>
         </Content>
       </Container>
     );
   }
 }
-
 export default Register;
