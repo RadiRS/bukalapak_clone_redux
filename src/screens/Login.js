@@ -14,10 +14,9 @@ import {
   Icon
 } from 'native-base';
 // Actions
-import { loginUser } from '../publics/redux/actions/authActions';
+import { loginUser, getUser } from '../publics/redux/actions/authActions';
 // Component
 import ButtonComponent from '../components/Button';
-import { TextInput } from 'react-native-gesture-handler';
 
 class Login extends Component {
   state = {
@@ -32,7 +31,9 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    this._retrieveData();
+    // this._retrieveData();
+    // this.props.getUser();
+    this.props.getUser();
   }
 
   _retrieveData = async () => {
@@ -116,12 +117,14 @@ class Login extends Component {
           <View style={{ marginBottom: 30 }}>
             <Item>
               <Input
+                style={{ fontSize: 25 }}
                 onChangeText={email => this.setState({ email })}
                 placeholder="Email / Username"
               />
             </Item>
             <Item>
               <Input
+                style={{ fontSize: 25 }}
                 secureTextEntry={true}
                 onChangeText={password => this.setState({ password })}
                 placeholder="Password"
@@ -185,11 +188,13 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.user
 });
 
 const mapDispatchToProps = {
-  loginUser
+  loginUser,
+  getUser
 };
 
 export default connect(

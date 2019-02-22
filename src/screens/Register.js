@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { TouchableOpacity, Modal } from 'react-native';
 import {
   Text,
@@ -10,16 +11,24 @@ import {
   Form,
   Input,
   Button,
-  Icon
+  Icon,
+  Toast
 } from 'native-base';
+// Actions
+import { registerUser } from '../publics/redux/actions/authActions';
+// Component
 import ButtonComponent from '../components/Button';
 import InfoSlider from 'react-native-infoslider';
 
 class Register extends Component {
   state = {
+    user: {
+      username: '',
+      email: '',
+      password: '',
+      password_confirmation: ''
+    },
     modalVisible: false,
-    position: 1,
-    interval: null,
     dataSource: [
       {
         image: require('../../assets/img_slide_register/01.png')
@@ -36,27 +45,6 @@ class Register extends Component {
     ]
   };
 
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
-  }
-
-  componentWillMount() {
-    this.setState({
-      interval: setInterval(() => {
-        this.setState({
-          position:
-            this.state.position === this.state.dataSource.length
-              ? 0
-              : this.state.position + 1
-        });
-      }, 2000)
-    });
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.state.interval);
-  }
-
   static navigationOptions = () => {
     return {
       title: 'Keuntungan mendaftar',
@@ -72,7 +60,34 @@ class Register extends Component {
     };
   };
 
+  componentDidUpdate(prevProps) {
+    if (this.props.error_message !== prevProps.error_message) {
+      Toast.show({
+        text: this.props.error_message.error,
+        buttonText: 'Okay',
+        duration: 2000,
+        type: 'danger'
+      });
+    }
+    if (this.props.user.token) {
+      this.props.navigation.navigate('Login');
+    }
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
+  handleUserRegister = () => {
+    const { user } = this.state;
+
+    this.props.registerUser(user);
+    this.setModalVisible(false);
+  };
+
   render() {
+    const { user } = this.state;
+
     return (
       <Container>
         <Content padder contentContainerStyle={{ alignItems: 'center' }}>
@@ -164,6 +179,8 @@ class Register extends Component {
               </Text>
             </TouchableOpacity>
           </View>
+
+          {/* Modal Registration */}
           <Modal
             animationType="slide"
             transparent={false}
@@ -176,25 +193,63 @@ class Register extends Component {
               <Content padder>
                 <Form>
                   <Item stackedLabel>
-                    <Label>Name Lenkap</Label>
-                    <Input />
+                    <Label>Nama Lengkap</Label>
+                    <Input
+                      style={{ fontSize: 25 }}
+                      onChangeText={value =>
+                        this.setState(
+                          Object.assign(user, {
+                            username: value
+                          })
+                        )
+                      }
+                    />
                   </Item>
                   <Item stackedLabel last>
                     <Label>Email atau Nomor Handphone</Label>
-                    <Input />
+                    <Input
+                      style={{ fontSize: 25 }}
+                      onChangeText={value =>
+                        this.setState(
+                          Object.assign(user, {
+                            email: value
+                          })
+                        )
+                      }
+                    />
                   </Item>
                   <Item stackedLabel last>
                     <Label>Password</Label>
-                    <Input />
+                    <Input
+                      style={{ fontSize: 25 }}
+                      secureTextEntry={true}
+                      onChangeText={value =>
+                        this.setState(
+                          Object.assign(user, {
+                            password: value
+                          })
+                        )
+                      }
+                    />
                   </Item>
                   <Item stackedLabel last>
                     <Label>Konfirmasi Password</Label>
-                    <Input />
+                    <Input
+                      style={{ fontSize: 25 }}
+                      secureTextEntry={true}
+                      onChangeText={value =>
+                        this.setState(
+                          Object.assign(user, {
+                            password_confirmation: value
+                          })
+                        )
+                      }
+                    />
                   </Item>
                 </Form>
                 <Button
                   onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
+                    this.handleUserRegister();
                   }}
                   block
                   style={{
@@ -230,4 +285,19 @@ class Register extends Component {
     );
   }
 }
-export default Register;
+
+const mapStateToProps = state => {
+  return {
+    error_message: state.auth.error_message,
+    user: state.auth.user
+  };
+};
+
+const mapDispatchToProps = {
+  registerUser
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Register);

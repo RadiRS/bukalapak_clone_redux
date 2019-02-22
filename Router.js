@@ -19,7 +19,7 @@ import ProfileSetting from './src/screens/ProfileSetting';
 
 // App Main Stack Navigator
 const DashboardStackNavigator = createStackNavigator({
-  Login,
+  // Login,
   ProductList,
   ProductDetail,
   CartList,
@@ -42,8 +42,8 @@ const ProfileStackNavigator = createStackNavigator({
 
 // App Profile Switch Navigator
 const ProfileSwitchNavigator = createSwitchNavigator({
-  ProfileStackNavigator,
-  AuthStackNavigator
+  AuthStackNavigator,
+  ProfileStackNavigator
 });
 
 // App Drawer Navigator

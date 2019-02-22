@@ -13,7 +13,7 @@ import {
   CardItem
 } from 'native-base';
 
-// import {moduleName} from '../publics/redux/reducers/authReducers'
+import { getUser } from '../publics/redux/actions/authActions';
 
 class Profile extends Component {
   static navigationOptions = () => {
@@ -22,21 +22,9 @@ class Profile extends Component {
     };
   };
 
-  componentDidMount() {
-    this._retrieveData();
-  }
-
-  _retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('userData');
-      if (value === null) {
-        // We have data!!
-        this.props.navigation.navigate('Login');
-      }
-    } catch (error) {
-      // Error retrieving data
-    }
-  };
+  // componentDidMount() {
+  //   this.props.getUser();
+  // }
 
   render() {
     return (
@@ -77,7 +65,7 @@ class Profile extends Component {
                 <Text
                   style={{ fontSize: 25, color: '#fafafa', fontWeight: 'bold' }}
                 >
-                  Radi
+                  {this.props.user.username}
                 </Text>
               </View>
               <View
@@ -294,10 +282,14 @@ class Profile extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.auth.user.user
+  user: state.auth.user
 });
+
+const mapDispatchToProps = {
+  getUser
+};
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Profile);
