@@ -22,9 +22,9 @@ class Profile extends Component {
     };
   };
 
-  // componentDidMount() {
-  //   this.props.getUser();
-  // }
+  componentDidMount() {
+    this.props.getUser();
+  }
 
   render() {
     return (

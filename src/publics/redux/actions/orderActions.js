@@ -10,7 +10,8 @@ import {
   UPDATE_TOTAL_PRICE,
   UPDATE_COURIER,
   UPDATE_TOTAL_PRICE_ORDER,
-  CREATE_CUSTOMER
+  CREATE_CUSTOMER,
+  DELETE_ORDERS
 } from '../actions/types';
 
 export const getOrders = () => {
@@ -33,6 +34,14 @@ export const createOrder = product => async dispatch => {
     type: CREATE_ORDER,
     payload: res.data
   });
+
+  // await axios.post(`${REST_API}/order`, data).then(res => {
+  //   dispatch(getOrders(), {
+  //     type: CREATE_ORDER,
+  //     payload: res.data
+  //   });
+  // dispatch();
+  // });
 };
 
 export const deleteOrder = product => async dispatch => {
@@ -44,6 +53,16 @@ export const deleteOrder = product => async dispatch => {
   });
 };
 
+export const deleteAllOrder = () => async dispatch => {
+  const res = await axios.delete(`${REST_API}/orders`);
+
+  dispatch({
+    type: DELETE_ORDERS,
+    payload: res.data
+  });
+  dispatch(getOrders());
+};
+
 export const incOrderQty = product => async dispatch => {
   const data = {
     qty: product.qty + 1,
@@ -51,6 +70,10 @@ export const incOrderQty = product => async dispatch => {
   };
 
   const res = await axios.patch(`${REST_API}/order/${product.id}`, data);
+
+  // await axios.patch(`${REST_API}/order/${product.id}`, data).then(res => {
+  //   dispatch(getOrders());
+  // });
 
   dispatch({
     type: INC_ORDER_QTY,
@@ -67,6 +90,7 @@ export const decOrderQty = product => async dispatch => {
 
   const res = await axios.patch(`${REST_API}/order/${product.id}`, data);
 
+  // For dispatch new data in global store to update state components
   dispatch({
     type: DEC_ORDER_QTY,
     payload: { data: res.data, product: product }

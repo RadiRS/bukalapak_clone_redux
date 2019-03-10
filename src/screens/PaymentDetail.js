@@ -11,7 +11,10 @@ import {
   Spinner
 } from 'native-base';
 // Actions
-import { getOrders } from '../publics/redux/actions/orderActions';
+import {
+  getOrders,
+  deleteAllOrder
+} from '../publics/redux/actions/orderActions';
 // Helper
 import { idrCurrency } from '../helper/helper';
 // Image
@@ -162,7 +165,14 @@ class PaymentDetail extends Component {
                   </View>
                 ))}
               </Card>
-              <ButtonComponent block={true} buttonName="Selesai" />
+              <ButtonComponent
+                onPress={() => {
+                  this.props.deleteAllOrder();
+                  this.props.navigation.navigate('ProductList');
+                }}
+                block={true}
+                buttonName="Selesai"
+              />
             </>
           )}
         </Content>
@@ -180,7 +190,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getOrders
+  getOrders,
+  deleteAllOrder
 };
 
 export default connect(

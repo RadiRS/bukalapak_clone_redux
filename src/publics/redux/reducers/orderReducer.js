@@ -15,7 +15,8 @@ import {
   UPDATE_TOTAL_PRICE,
   UPDATE_COURIER,
   UPDATE_TOTAL_PRICE_ORDER,
-  CREATE_CUSTOMER
+  CREATE_CUSTOMER,
+  DELETE_ORDERS
 } from '../actions/types';
 
 const initialState = {
@@ -86,6 +87,13 @@ export default function(state = initialState, action) {
         orders: state.orders.filter(
           order => order.id !== action.payload.order.id
         )
+      };
+
+    case DELETE_ORDERS:
+      return {
+        ...state,
+        // orders: action.payload.data
+        orders: []
       };
 
     case INC_ORDER_QTY:

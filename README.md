@@ -1,8 +1,8 @@
-## Task 03 Arkademy
+## Project Arkademy
 
 ### Bukalapak Clone
 
-Tugas minggu ketiga bootcamp **Arkademy**. Membuat aplikasi E-Commerce dengan ketentuan **Product List, Product Detail, Cart, Payment Page, Register Page, Login Page, Profile Page**
+Project minggu ketiga bootcamp **Arkademy**. Membuat aplikasi E-Commerce dengan ketentuan **Product List, Product Detail, Cart, Payment Page, Register Page, Login Page, Profile Page**
 
 ### Tech :
 

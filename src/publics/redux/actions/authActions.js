@@ -44,7 +44,7 @@ export const loginUser = userData => async dispatch => {
 
 export const registerUser = userdata => async dispatch => {
   const res = await axios.post(`${REST_API}/auth/register`, userdata);
-  alert(JSON.stringify(res.data.token));
+  // alert(JSON.stringify(res.data.token));
 
   if (!res.data.error) {
     _storeData(res.data.token);
